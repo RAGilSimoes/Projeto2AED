@@ -78,27 +78,22 @@ void shuffle(int *array, int size) {
     }
 }
 
-// Definições para simplificar: as chaves e os dados são inteiros.
-typedef int Key;
-typedef int Data;
 
 typedef struct TreapNode {
-    Key key;             // Chave para ordenação da árvore binária de busca
-    Data data;           // Dados armazenados no nó
+    int key;             // Chave para ordenação da árvore binária de busca
     int priority;        // Prioridade aleatória para manter a propriedade heap
     struct TreapNode *left, *right;
 } TreapNode;
 
-// Cria um novo nó da Treap com chave, dado e prioridade aleatória
-TreapNode* newNode(Key key, Data data) {
+// Cria um novo nó da Treap com chave e prioridade aleatória
+TreapNode* newNode(int key, int priority) {
     TreapNode *node = (TreapNode *) malloc(sizeof(TreapNode));
     if (!node) {
         fprintf(stderr, "Erro na alocação de memória.\n");
         exit(EXIT_FAILURE);
     }
     node->key = key;
-    node->data = data;
-    node->priority = rand();
+    node->priority = priority;
     node->left = node->right = NULL;
     return node;
 }
@@ -131,21 +126,20 @@ TreapNode* leftRotate(TreapNode *x, int *rotacoes) {
     return y;
 }
 
-// Insere um novo nó na Treap e garante a propriedade heap via rotações
-TreapNode* treapInsert(TreapNode *root, Key key, Data data, int *rotacoes) {
+// Insere um novo nó na Treap e garante a propriedade heap
+TreapNode* treapInsert(TreapNode *root, int key, int priority, int *rotacoes) {
     if (root == NULL)
-        return newNode(key, data);
+        return newNode(key, priority);
     
     if (key < root->key) {
-        root->left = treapInsert(root->left, key, data, rotacoes);
+        root->left = treapInsert(root->left, key, priority, rotacoes);
         if (root->left && root->left->priority > root->priority)
             root = rightRotate(root, rotacoes);
     } else if (key > root->key) {
-        root->right = treapInsert(root->right, key, data, rotacoes);
+        root->right = treapInsert(root->right, key, priority, rotacoes);
         if (root->right && root->right->priority > root->priority)
             root = leftRotate(root, rotacoes);
     }
-    // Se a chave já existir, você pode optar por atualizar os dados ou não inserir duplicata.
     return root;
 }
 
@@ -221,8 +215,8 @@ int main() {
 
         start = clock();
         for (int l = 0; l < tamanho; l++) {
-            int probabilidade = rand() % 1000001;
-            root = treapInsert(root, arrayA[l], probabilidade, &rotacoes);
+            int prioridade = rand() % 1000001;
+            root = treapInsert(root, arrayA[l], prioridade, &rotacoes);
         }
         end = clock();
 
@@ -254,8 +248,8 @@ int main() {
 
         start = clock();
         for (int l = 0; l < tamanho; l++) {
-            int probabilidade = rand() % 1000001;
-            root = treapInsert(root, arrayB[l], probabilidade, &rotacoes);
+            int prioridade = rand() % 1000001;
+            root = treapInsert(root, arrayB[l], prioridade, &rotacoes);
         }
         end = clock();
 
@@ -289,8 +283,8 @@ int main() {
 
         start = clock();
         for (int l = 0; l < tamanho; l++) {
-            int probabilidade = rand() % 1000001;
-            root = treapInsert(root, arrayC[l], probabilidade, &rotacoes);
+            int prioridade = rand() % 1000001;
+            root = treapInsert(root, arrayC[l], prioridade, &rotacoes);
         }
         end = clock();
 
@@ -324,8 +318,8 @@ int main() {
 
         start = clock();
         for (int l = 0; l < tamanho; l++) {
-            int probabilidade = rand() % 1000001;
-            root = treapInsert(root, arrayD[l], probabilidade, &rotacoes);
+            int prioridade = rand() % 1000001;
+            root = treapInsert(root, arrayD[l], prioridade, &rotacoes);
         }
         end = clock();
 
